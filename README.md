@@ -49,7 +49,3 @@ To exit the virtual environment, run:
 ```bash
 deactivate
 ```
-
-## License
-This project is licensed under the MIT License.
-
