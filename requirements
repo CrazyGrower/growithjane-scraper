@@ -1,0 +1,5 @@
+argparse
+selenium
+reportlab
+requests
+python-dotenv
