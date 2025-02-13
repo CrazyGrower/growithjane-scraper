@@ -11,6 +11,31 @@ A simple tool to extract your grow logs from GrowWithJane and generate a detaile
 - Complete history of watering and nutrients
 - Automatic date and duration formatting
 
+## 📂 Project Structure
+
+```
+growithjane-scraper/
+├── src/                    # Source code
+│   ├── __init__.py        # Package initialization
+│   ├── scraper.py         # Web scraping functionality
+│   ├── pdf_generator.py   # PDF generation
+│   └── utils.py           # Utility functions
+├── tests/                  # Test files
+│   ├── __init__.py
+│   ├── test_scraper.py
+│   └── test_pdf_generator.py
+├── docs/                   # Documentation
+│   ├── images/
+│   │   └── example_report.png
+│   └── example.pdf
+├── .env.example           # Environment variables template
+├── .gitignore             # Git ignore rules
+├── LICENSE                # MIT License
+├── README.md             # This file
+├── requirements.txt      # Python dependencies
+└── template.html         # PDF template
+```
+
 ## 📋 Prerequisites
 
 Before installing the script, make sure you have:
@@ -79,6 +104,13 @@ python main.py -v
 
 The PDF will be generated in the current folder with your grow log name.
 
+## 🧪 Running Tests
+
+To run the test suite:
+```bash
+python -m unittest discover tests
+```
+
 ## 📸 Output Example
 
 The generated PDF includes:
@@ -89,6 +121,9 @@ The generated PDF includes:
   - Plant state
   - Actions (watering, nutrients, etc.)
   - Progress photos
+
+Example screenshot:
+![Example Report](docs/images/example_report.png)
 
 ## 🔧 Troubleshooting
 
@@ -122,4 +157,4 @@ GROWLOG_URL=https://growithjane.com/growlog/your-unique-identifier/
 
 ## 📄 License
 
-This project is under MIT License. See the LICENSE file for more details.
+This project is under MIT License. See the [LICENSE](LICENSE) file for more details.
