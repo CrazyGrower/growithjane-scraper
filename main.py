@@ -16,6 +16,7 @@ from weasyprint import HTML
 # Load environment variables
 load_dotenv()
 URL = os.getenv("GROWLOG_URL")
+CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH")
 
 # Argument for verbose mode
 parser = argparse.ArgumentParser()
@@ -33,7 +34,7 @@ def configure_driver():
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
-    service = Service('/opt/homebrew/bin/chromedriver')
+    service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     log("[LOG] WebDriver configured successfully.")
     return driver
