@@ -1,5 +1,6 @@
 argparse
 selenium
-reportlab
 requests
 python-dotenv
+jinja2
+weasyprint
