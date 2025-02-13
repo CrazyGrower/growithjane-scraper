@@ -1,95 +1,125 @@
-# GrowLog Scraper
+# GrowLog Scraper 🌱
 
-This script extracts grow logs from the GrowWithJane website and generates a PDF report.
+A simple tool to extract your grow logs from GrowWithJane and generate a detailed PDF report.
 
-## Prerequisites
+## 🚀 Features
 
-Before installing and running the script, make sure you have:
+- Automatic extraction of your GrowWithJane journal
+- Clean PDF generation with your photos and actions
+- Progress tracking (germination, growth, etc.)
+- Headless mode support (no GUI)
+- Complete history of watering and nutrients
+- Automatic date and duration formatting
 
-- **Python 3.x** installed
-- **Google Chrome** installed
-- **ChromeDriver** matching your browser version ([download here](https://sites.google.com/chromium.org/driver/))
-- A valid internet connection
+## 📋 Prerequisites
 
-Verify that `chromedriver` is installed by running:
+Before installing the script, make sure you have:
+
+- Python 3.x installed
+- Google Chrome installed
+- ChromeDriver compatible with your Chrome version ([download here](https://sites.google.com/chromium.org/driver/))
+- Internet access
+
+## 💾 Installation
+
+1. **Clone the repository**
 ```bash
-which chromedriver  # (or "where chromedriver" on Windows)
-```
-If nothing appears, add `chromedriver` to your PATH.
-
-## Installation
-
-### 1. Clone the repository
-```bash
-git clone <repository_url>
-cd <repository_name>
-```
-
-### 2. Create a virtual environment
-**On macOS and Linux:**
-```bash
-python3 -m venv myenv
-source myenv/bin/activate
-```
-**On Windows:**
-```bash
-python -m venv myenv
-myenv\Scripts\activate
+git clone https://github.com/your-username/growithjane-scraper.git
+cd growithjane-scraper
 ```
 
-### 3. Install dependencies
-Ensure `requirements.txt` is present in the cloned folder.
+2. **Create a virtual environment**
+```bash
+# On Linux/macOS
+python3 -m venv venv
+source venv/bin/activate
+
+# On Windows
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuration
-
-### 1. Set the GrowLog URL
-Copy the `.env.example` file and rename it to `.env`:
+4. **Configuration**
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and update the `GROWLOG_URL` variable with your GrowLog URL:
+Edit the `.env` file and configure your variables:
 ```plaintext
+# Your GrowWithJane grow log URL
 GROWLOG_URL=https://growithjane.com/growlog/growlog-example/
+
+# Path to your ChromeDriver
+CHROMEDRIVER_PATH=/path/to/chromedriver
 ```
 
-## Usage
+**Important note:** 
+- Replace `growlog-example` in the URL with your grow log identifier
+- Replace `/path/to/chromedriver` with the actual path to your ChromeDriver:
+  - On macOS (with Homebrew): typically `/opt/homebrew/bin/chromedriver`
+  - On Linux: use `which chromedriver` to find the path
+  - On Windows: use `where chromedriver` then copy the full path
 
-Run the script with the following command:
+## 🎯 Usage
+
+### Simple Mode
 ```bash
 python main.py
 ```
 
-To enable verbose mode (detailed logs output):
+### Verbose Mode (more details)
 ```bash
 python main.py -v
 ```
 
-Once execution is complete, the PDF file will be generated in the current directory as `<grow_log_name>.pdf`.
+The PDF will be generated in the current folder with your grow log name.
 
-## Deactivating the Virtual Environment
+## 📸 Output Example
 
-When you are done, you can exit the virtual environment with:
-```bash
-deactivate
+The generated PDF includes:
+- A title page with your grow name
+- A progress status (In Progress/Completed)
+- Journal entries with:
+  - Date and grow day
+  - Plant state
+  - Actions (watering, nutrients, etc.)
+  - Progress photos
+
+## 🔧 Troubleshooting
+
+### Error: "chromedriver" not found
 ```
-
-## Troubleshooting
-
-### Error: `selenium.common.exceptions.WebDriverException: Message: 'chromedriver' executable needs to be in PATH`
-
-Solution: Ensure `chromedriver` is installed and accessible via:
-```bash
-which chromedriver  # (or "where chromedriver" on Windows)
+selenium.common.exceptions.WebDriverException: Message: 'chromedriver' executable needs to be in PATH
 ```
-If not, download it and add its path to your `PATH` environment variable.
+**Solution:** 
+1. Find your ChromeDriver path:
+   ```bash
+   which chromedriver  # On Linux/macOS
+   where chromedriver  # On Windows
+   ```
+2. Copy the full path to your `.env` file:
+   ```plaintext
+   CHROMEDRIVER_PATH=/exact/path/to/chromedriver
+   ```
 
-### Error: `ModuleNotFoundError: No module named 'dotenv'`
-
-Solution: Ensure all dependencies are installed by running:
+### Error: "No module named 'selenium'"
+**Solution:**
 ```bash
 pip install -r requirements.txt
 ```
+
+### Error: "Invalid URL"
+**Solution:**
+Check that the URL in your `.env` file is correct and accessible. It should look like:
+```plaintext
+GROWLOG_URL=https://growithjane.com/growlog/your-unique-identifier/
+```
+
+## 📄 License
+
+This project is under MIT License. See the LICENSE file for more details.
