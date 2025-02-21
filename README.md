@@ -1,11 +1,12 @@
 # GrowLog Scraper 🌱
 
-A simple tool to extract your grow logs from GrowWithJane and generate a detailed PDF report.
+A simple tool to extract your grow logs from GrowWithJane and generate a detailed PDF report and video summary.
 
 ## 🚀 Features
 
 - Automatic extraction of your GrowWithJane journal
 - Clean PDF generation with your photos and actions
+- Video summarizing the growth process
 - Progress tracking (germination, growth, etc.)
 - Headless mode support (no GUI)
 - Complete history of watering and nutrients
@@ -19,11 +20,13 @@ growithjane-scraper/
 │   ├── __init__.py        # Package initialization
 │   ├── scraper.py         # Web scraping functionality
 │   ├── pdf_generator.py   # PDF generation
+│   ├── video_generator.py  # Video generation
 │   └── utils.py           # Utility functions
 ├── tests/                  # Test files
 │   ├── __init__.py
 │   ├── test_scraper.py
-│   └── test_pdf_generator.py
+│   ├── test_pdf_generator.py
+│   └── test_video_generator.py  # New test for video generation
 ├── docs/                   # Documentation
 │   ├── images/
 │   │   └── example_report.png
@@ -41,8 +44,6 @@ growithjane-scraper/
 Before installing the script, make sure you have:
 
 - Python 3.x installed
-- Google Chrome installed
-- ChromeDriver compatible with your Chrome version ([download here](https://sites.google.com/chromium.org/driver/))
 - Internet access
 
 ## 💾 Installation
@@ -78,17 +79,10 @@ Edit the `.env` file and configure your variables:
 ```plaintext
 # Your GrowWithJane grow log URL
 GROWLOG_URL=https://growithjane.com/growlog/growlog-example/
-
-# Path to your ChromeDriver
-CHROMEDRIVER_PATH=/path/to/chromedriver
 ```
 
 **Important note:** 
 - Replace `growlog-example` in the URL with your grow log identifier
-- Replace `/path/to/chromedriver` with the actual path to your ChromeDriver:
-  - On macOS (with Homebrew): typically `/opt/homebrew/bin/chromedriver`
-  - On Linux: use `which chromedriver` to find the path
-  - On Windows: use `where chromedriver` then copy the full path
 
 ## 🎯 Usage
 
@@ -102,7 +96,13 @@ python main.py
 python main.py -v
 ```
 
-The PDF will be generated in the current folder with your grow log name.
+### Headless Mode (no browser window)
+The script runs in headless mode by default. To show the browser window, modify the `headless` parameter in `main.py`:
+```python
+browser = await p.chromium.launch(headless=False)
+```
+
+The PDF and video will be generated in the current folder with your grow log name.
 
 ## 🧪 Running Tests
 
@@ -121,31 +121,25 @@ The generated PDF includes:
   - Plant state
   - Actions (watering, nutrients, etc.)
   - Progress photos
+- A video summarizing the growth process
 
 Example screenshot:
 ![Example Report](docs/images/example_report.png)
 
 ## 🔧 Troubleshooting
 
-### Error: "chromedriver" not found
-```
-selenium.common.exceptions.WebDriverException: Message: 'chromedriver' executable needs to be in PATH
-```
-**Solution:** 
-1. Find your ChromeDriver path:
-   ```bash
-   which chromedriver  # On Linux/macOS
-   where chromedriver  # On Windows
-   ```
-2. Copy the full path to your `.env` file:
-   ```plaintext
-   CHROMEDRIVER_PATH=/exact/path/to/chromedriver
-   ```
-
-### Error: "No module named 'selenium'"
+### Error: "No module named 'playwright'"
 **Solution:**
 ```bash
 pip install -r requirements.txt
+playwright install
+```
+
+### Error: Browser not found
+**Solution:**
+Run the Playwright installation command:
+```bash
+playwright install chromium
 ```
 
 ### Error: "Invalid URL"

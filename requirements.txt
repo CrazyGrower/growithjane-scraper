@@ -1,5 +1,5 @@
 argparse
-selenium
+playwright
 requests
 python-dotenv
 jinja2

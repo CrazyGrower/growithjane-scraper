@@ -10,14 +10,14 @@ def load_config(verbose=False):
     
     config = {
         'url': os.getenv("GROWLOG_URL"),
-        'chromedriver_path': os.getenv("CHROMEDRIVER_PATH")
+        'chromedriver_path': None  # Playwright ne nécessite pas de chemin pour le driver
     }
     
     # Validate configuration
     if not config['url']:
         raise ValueError("GROWLOG_URL is not set in .env file")
     if not config['chromedriver_path']:
-        raise ValueError("CHROMEDRIVER_PATH is not set in .env file")
+        print("Playwright will manage the browser driver automatically.")
         
     if verbose:
         print("[LOG] Configuration loaded successfully")
