@@ -35,12 +35,8 @@ async def generate(request: Request):
     try:
         form_data = await request.form()
         url = form_data.get("url")
-        
-        # Validation de l'URL
         if not url:
             return {"success": False, "error": "URL non fournie"}
-        if not url.startswith("https://growithjane.com/growlog/"):
-            return {"success": False, "error": "URL invalide - Doit être une URL GrowWithJane valide"}
             
         need_video = str(form_data.get("generate_video", "false")).lower() in ("true", "1", "yes", "on")
         verbose_mode = str(form_data.get("verbose", "false")).lower() in ("true", "1", "yes", "on")
@@ -58,15 +54,27 @@ async def generate(request: Request):
             
             await context.close()
             await browser.close()
-
+            
+            # Générer le PDF
             pdf_file = generate_pdf(title, entries, verbose=verbose_mode)
+            pdf_name = os.path.basename(pdf_file)  # Juste le nom du fichier
             
             if need_video:
                 video_output = f"{title.replace(' ', '_')}.mp4"
-                generate_video(pdf_file, video_output, verbose=verbose_mode)
-                return {"success": True, "pdf_file": pdf_file, "video_file": video_output}
+                video_file = generate_video(pdf_file, video_output, verbose=verbose_mode)
+                video_name = os.path.basename(video_file)  # Juste le nom du fichier
+                return {
+                    "success": True,
+                    "message": "Fichiers générés dans le dossier 'output'",
+                    "pdf_file": pdf_name,
+                    "video_file": video_name
+                }
             
-            return {"success": True, "pdf_file": pdf_file}
+            return {
+                "success": True,
+                "message": "Fichier PDF généré dans le dossier 'output'",
+                "pdf_file": pdf_name
+            }
             
     except Exception as e:
         import traceback
