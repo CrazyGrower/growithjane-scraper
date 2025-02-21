@@ -192,20 +192,29 @@ def images_to_video(images, dates, output_path, duration=2, fps=1):
     # Écrire la vidéo
     clip.write_videofile(output_path, fps=fps)
 
-def generate_video(pdf_file, output_path):
+def generate_video(pdf_file, output_path, verbose=False):
     """Génère une vidéo à partir du PDF."""
-    # Extraction des images et dates en préservant la correspondance
-    print("Extraction des images et dates du PDF...")
+    # Convertir verbose en booléen si c'est une string
+    if isinstance(verbose, str):
+        verbose = verbose.lower() == "true"
+
+    if verbose:
+        print("Extraction des images et dates du PDF...")
+    
     images, dates = extract_images_and_dates_from_pdf(pdf_file)
-
+    
     if len(images) == 0:
-        print("Aucune image n'a été trouvée dans le PDF. Vérifiez que le PDF contient bien des images.")
+        if verbose:
+            print("Aucune image n'a été trouvée dans le PDF. Vérifiez que le PDF contient bien des images.")
         return
-
-    print("Ajout des dates aux images...")
+    
+    if verbose:
+        print("Ajout des dates aux images...")
     edited_images = add_date_to_images(images, dates)
 
-    print("Création de la vidéo...")
-    # Limiter la durée à 2 secondes par image pour éviter une vidéo trop longue
+    if verbose:
+        print("Création de la vidéo...")
     images_to_video(edited_images, dates, output_path, duration=2)
-    print(f"Vidéo créée avec succès: {output_path}") 
+    
+    if verbose:
+        print(f"Vidéo créée avec succès: {output_path}")

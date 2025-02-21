@@ -5,8 +5,12 @@ Handles the generation of PDF reports using WeasyPrint.
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
-def generate_pdf(title, entries, template_path="template.html", verbose=False):
+def generate_pdf(title, entries, template_path="templates/template.html", verbose=False):
     """Generate a styled PDF using an HTML template and WeasyPrint."""
+    # Convertir verbose en booléen si c'est une string
+    if isinstance(verbose, str):
+        verbose = verbose.lower() == "true"
+    
     if verbose:
         print("[LOG] Generating PDF...")
 
