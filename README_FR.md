@@ -1,34 +1,63 @@
 # GrowLog Scraper 🌱
 
-Un outil simple pour extraire vos journaux de culture depuis GrowWithJane et générer un rapport PDF détaillé.
+Un outil simple pour extraire vos journaux de culture de GrowWithJane et générer un rapport PDF détaillé ainsi qu'une vidéo récapitulative.
 
-## 🚀 Caractéristiques
+## 🚀 Fonctionnalités
 
+- Interface web pour une saisie facile des URLs et des options
 - Extraction automatique de votre journal GrowWithJane
-- Génération d'un PDF propre avec vos photos et actions
+- Génération de PDF propre avec vos photos et actions
+- Génération optionnelle d'une vidéo récapitulative de croissance
 - Suivi de la progression (germination, croissance, etc.)
-- Support du mode headless (pas d'interface graphique)
-- Historique complet des arrosages et nutriments
+- Historique complet des arrosages et nutriments 
 - Formatage automatique des dates et durées
+
+## 📂 Structure du Projet
+
+```
+growithjane-scraper/
+├── src/                    # Code source
+│   ├── __init__.py        # Initialisation du package
+│   ├── scraper.py         # Fonctionnalités de scraping
+│   ├── pdf_generator.py   # Génération de PDF
+│   ├── video_generator.py # Génération de vidéo
+│   ├── web_interface.py   # Interface web
+│   └── utils.py           # Fonctions utilitaires
+├── static/                # Fichiers statiques pour l'interface web
+│   └── css/              
+│       └── style.css
+├── templates/             # Templates HTML
+│   ├── index.html        # Template interface web
+│   └── template.html     # Template PDF
+├── output/               # Fichiers générés
+│   ├── *.pdf            # PDFs générés
+│   └── *.mp4            # Vidéos générées
+├── tests/                # Fichiers de test
+│   ├── __init__.py
+│   ├── test_scraper.py
+│   └── test_pdf_generator.py
+├── .gitignore           # Règles git ignore
+├── LICENSE              # Licence MIT
+├── README.md           # Ce fichier
+└── requirements.txt    # Dépendances Python
+```
 
 ## 📋 Prérequis
 
 Avant d'installer le script, assurez-vous d'avoir :
 
 - Python 3.x installé
-- Google Chrome installé
-- ChromeDriver compatible avec votre version de Chrome ([télécharger ici](https://sites.google.com/chromium.org/driver/))
-- Un accès internet
+- Accès Internet
 
 ## 💾 Installation
 
-1. **Clonez le repository**
+1. **Cloner le dépôt**
 ```bash
-git clone https://github.com/votre-username/growithjane-scraper.git
+git clone https://github.com/your-username/growithjane-scraper.git
 cd growithjane-scraper
 ```
 
-2. **Créez un environnement virtuel**
+2. **Créer un environnement virtuel**
 ```bash
 # Sur Linux/macOS
 python3 -m venv venv
@@ -39,87 +68,76 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-3. **Installez les dépendances**
+3. **Installer les dépendances**
 ```bash
 pip install -r requirements.txt
+playwright install
 ```
-
-4. **Configuration**
-```bash
-cp .env.example .env
-```
-
-Éditez le fichier `.env` et configurez vos variables :
-```plaintext
-# URL de votre grow log sur GrowWithJane
-GROWLOG_URL=https://growithjane.com/growlog/growlog-exemple/
-
-# Chemin vers votre ChromeDriver
-CHROMEDRIVER_PATH=/path/to/chromedriver
-```
-
-**Note importante :** 
-- Remplacez `growlog-exemple` dans l'URL par l'identifiant de votre grow log
-- Remplacez `/path/to/chromedriver` par le chemin réel vers votre ChromeDriver :
-  - Sur macOS (avec Homebrew) : généralement `/opt/homebrew/bin/chromedriver`
-  - Sur Linux : utilisez `which chromedriver` pour trouver le chemin
-  - Sur Windows : utilisez `where chromedriver` puis copiez le chemin complet
 
 ## 🎯 Utilisation
 
-### Mode Simple
+1. **Démarrer le serveur web**
 ```bash
 python main.py
 ```
 
-### Mode Verbose (plus de détails)
-```bash
-python main.py -v
-```
+2. **Accéder à l'interface web**
+- Ouvrez votre navigateur et allez sur `http://localhost:8000`
+- Entrez votre URL GrowWithJane au format : `https://growithjane.com/growlog/votre-id-de-growlog`
+- Choisissez vos options :
+  - Générer une vidéo (optionnel)
+  - Mode verbose pour les logs détaillés
+- Cliquez sur "Générer le rapport"
 
-Le PDF sera généré dans le dossier courant avec le nom de votre grow log.
+Le PDF et la vidéo (si sélectionnée) seront générés dans le dossier `output`.
+
+## 🧪 Exécution des Tests
+
+Pour lancer la suite de tests :
+```bash
+python -m unittest discover tests
+```
 
 ## 📸 Exemple de Sortie
 
-Le PDF généré inclut :
-- Une page de titre avec le nom de votre grow
-- Un statut de progression (En cours/Terminé)
+Les fichiers générés incluent :
+
+### Rapport PDF
+- Une page de titre avec le nom de votre culture
+- Un état d'avancement (En cours/Terminé)
 - Les entrées du journal avec :
   - Date et jour de culture
   - État de la plante
   - Actions (arrosage, nutriments, etc.)
   - Photos de progression
 
+### Vidéo Récapitulative (Optionnelle)
+- Time-lapse de la progression de votre culture
+- Photos datées montrant le développement de la plante
+- Ajustement automatique de la durée
+
 ## 🔧 Dépannage
 
-### Erreur : "chromedriver" introuvable
-```
-selenium.common.exceptions.WebDriverException: Message: 'chromedriver' executable needs to be in PATH
-```
-**Solution :** 
-1. Trouvez le chemin de votre ChromeDriver :
-   ```bash
-   which chromedriver  # Sur Linux/macOS
-   where chromedriver  # Sur Windows
-   ```
-2. Copiez le chemin complet dans votre fichier `.env` :
-   ```plaintext
-   CHROMEDRIVER_PATH=/chemin/exact/vers/chromedriver
-   ```
-
-### Erreur : "No module named 'selenium'"
+### Erreur : "No module named 'playwright'"
 **Solution :**
 ```bash
 pip install -r requirements.txt
+playwright install
 ```
 
-### Erreur : "Invalid URL"
+### Erreur : "URL invalide"
 **Solution :**
-Vérifiez que l'URL dans votre fichier `.env` est correcte et accessible. Elle devrait ressembler à :
-```plaintext
-GROWLOG_URL=https://growithjane.com/growlog/votre-identifiant-unique/
+Assurez-vous que votre URL suit le format correct :
+```
+https://growithjane.com/growlog/votre-identifiant-unique/
 ```
 
-## 📄 License
+### Erreur : "Failed to launch browser"
+**Solution :**
+```bash
+playwright install chromium
+```
 
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
