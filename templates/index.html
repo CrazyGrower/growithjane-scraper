@@ -1,15 +1,34 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowLog Scraper</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-green-50 to-green-100 p-8">
-    <div class="max-w-md mx-auto">
+    <div class="max-w-2xl mx-auto">
+        <!-- Description Section -->
+        <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
+            <h2 class="text-xl font-bold text-green-800 mb-4">About GrowLog Scraper</h2>
+            <div class="prose text-gray-600">
+                <p class="mb-4">GrowLog Scraper is a tool that helps you extract and archive your growing journey from GrowWithJane. It generates a comprehensive PDF report containing all your grow data, including photos, actions, and progress tracking.</p>
+                
+                <h3 class="text-lg font-semibold text-green-700 mt-4 mb-2">How to use:</h3>
+                <ol class="list-decimal list-inside space-y-2 mb-4">
+                    <li>Copy your GrowWithJane log URL (format: https://growithjane.com/growlog/your-growlog-id it's need to be in public)</li>
+                    <li>Paste the URL in the form below</li>
+                    <li>Choose if you want to generate a time-lapse video</li>
+                    <li>Enable verbose mode for detailed processing information</li>
+                    <li>Click "Generate Report" and wait for processing</li>
+                </ol>
+
+                <p class="text-sm text-gray-500">Note: The generated files will be saved in the 'output' folder of the project.</p>
+            </div>
+        </div>
+
+        <!-- Main Form Section -->
         <div class="bg-white rounded-xl shadow-xl p-8">
             <!-- Header -->
             <div class="flex items-center justify-center gap-3 mb-8">
@@ -21,7 +40,7 @@
             <form id="generateForm" class="space-y-6" method="POST" onsubmit="handleSubmit(event)">
                 <!-- URL Input -->
                 <div class="space-y-2">
-                    <label for="urlInput" class="block text-green-800 font-medium">URL du GrowLog</label>
+                    <label for="urlInput" class="block text-green-800 font-medium">GrowLog URL</label>
                     <input
                         type="url"
                         id="urlInput"
@@ -39,7 +58,7 @@
                             class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
                         >
                         <i data-lucide="video" class="w-5 h-5 text-green-600"></i>
-                        <span class="text-green-800">Générer une vidéo</span>
+                        <span class="text-green-800">Generate video time-lapse</span>
                     </label>
 
                     <label class="flex items-center gap-3 p-4 rounded-lg border border-green-100 hover:bg-green-50 transition cursor-pointer">
@@ -49,7 +68,7 @@
                             class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
                         >
                         <i data-lucide="file-text" class="w-5 h-5 text-green-600"></i>
-                        <span class="text-green-800">Mode verbose</span>
+                        <span class="text-green-800">Verbose mode</span>
                     </label>
                 </div>
 
@@ -58,7 +77,7 @@
                     class="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-4 px-6 flex items-center justify-center gap-2 font-medium transition"
                 >
                     <i data-lucide="leaf" class="w-5 h-5"></i>
-                    <span>Générer le rapport</span>
+                    <span>Generate Report</span>
                 </button>
             </form>
 
@@ -66,7 +85,7 @@
             <div id="loadingState" class="mt-8 hidden">
                 <div class="flex items-center justify-center gap-3">
                     <div class="w-5 h-5 border-t-2 border-green-600 rounded-full animate-spin"></div>
-                    <span class="text-green-800">Génération en cours...</span>
+                    <span class="text-green-800">Processing...</span>
                 </div>
             </div>
 
@@ -76,8 +95,8 @@
                     <div class="flex gap-3">
                         <i data-lucide="check" class="w-5 h-5 text-green-600"></i>
                         <div>
-                            <h3 class="font-semibold text-green-800">Génération terminée !</h3>
-                            <p class="text-green-700">Le fichier PDF a été généré avec succès et se trouve à la racine du projet.</p>
+                            <h3 class="font-semibold text-green-800">Generation complete!</h3>
+                            <p class="text-green-700">The PDF file has been successfully generated in the output folder.</p>
                         </div>
                     </div>
                 </div>
@@ -86,8 +105,8 @@
                     <div class="flex gap-3">
                         <i data-lucide="video" class="w-5 h-5 text-green-600"></i>
                         <div>
-                            <h3 class="font-semibold text-green-800">Vidéo générée</h3>
-                            <p class="text-green-700">La vidéo a également été créée et se trouve à la racine du projet.</p>
+                            <h3 class="font-semibold text-green-800">Video generated</h3>
+                            <p class="text-green-700">The time-lapse video has also been created in the output folder.</p>
                         </div>
                     </div>
                 </div>
@@ -96,10 +115,9 @@
     </div>
 
     <script>
-        // Initialiser les icônes Lucide
+        // Initialize Lucide icons
         lucide.createIcons();
     
-        // Nouvelle fonction de gestion du formulaire
         async function handleSubmit(event) {
             event.preventDefault();
             
@@ -108,13 +126,12 @@
             const results = document.getElementById('results');
             const videoResult = document.getElementById('videoResult');
             
-            // Afficher l'état de chargement
             loadingState.classList.remove('hidden');
             results.classList.add('hidden');
             
             try {
                 const formData = new FormData(form);
-                console.log("Sending data:", Object.fromEntries(formData));  // Debug log
+                console.log("Sending data:", Object.fromEntries(formData));
     
                 const response = await fetch('/generate', {
                     method: 'POST',
@@ -122,7 +139,7 @@
                 });
                 
                 const data = await response.json();
-                console.log("Received response:", data);  // Debug log
+                console.log("Received response:", data);
                 
                 if (data.success) {
                     results.classList.remove('hidden');
@@ -132,11 +149,11 @@
                         videoResult.classList.add('hidden');
                     }
                 } else {
-                    alert('Erreur: ' + (data.error || 'Une erreur est survenue'));
+                    alert('Error: ' + (data.error || 'An error occurred'));
                 }
             } catch (error) {
-                console.error("Error:", error);  // Debug log
-                alert('Erreur lors de la génération: ' + error.message);
+                console.error("Error:", error);
+                alert('Generation error: ' + error.message);
             } finally {
                 loadingState.classList.add('hidden');
             }
