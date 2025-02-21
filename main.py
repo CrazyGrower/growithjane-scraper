@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from src.utils import load_config, log_message
 from src.scraper import configure_driver, load_page, extract_logs
 from src.pdf_generator import generate_pdf
+from src.video_generator import generate_video
 
 def main():
     # Parse command line arguments
@@ -37,6 +38,10 @@ def main():
         pdf_file = generate_pdf(title, entries, verbose=args.verbose)
         
         print(f"PDF generated successfully: {pdf_file}")
+        
+        video_output = title + ".mp4"
+        generate_video(pdf_file, video_output)
+        print(f"Vidéo créée avec succès : {video_output}")
         
     except Exception as e:
         print(f"Error: {str(e)}")

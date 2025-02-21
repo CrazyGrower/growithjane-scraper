@@ -3,3 +3,5 @@
 myenv/
 src/__pycache__/
 .DS_Store
+*.mp4
+__pycache__
