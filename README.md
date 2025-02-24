@@ -31,6 +31,7 @@ growithjane-scraper/
 │   └── template.html     # PDF template
 ├── output/               # Generated files
 │   ├── *.pdf            # Generated PDFs
+│   ├── planteName/*.     # Image  extract for video
 │   └── *.mp4            # Generated videos
 ├── tests/                # Test files
 │   ├── __init__.py

@@ -5,6 +5,37 @@ import moviepy.video.io.ImageSequenceClip as ImageSequenceClip
 from PIL import Image, ImageDraw, ImageFont
 import io
 import os
+import re
+
+def clean_filename(filename):
+    """Nettoie une chaîne pour en faire un nom de fichier valide"""
+    # Remplacer les espaces et caractères spéciaux par des underscores
+    filename = re.sub(r'[^a-zA-Z0-9]', '_', filename)
+    # Supprimer les underscores multiples
+    filename = re.sub(r'_+', '_', filename)
+    # Supprimer les underscores au début et à la fin
+    filename = filename.strip('_')
+    return filename
+
+def save_images_to_folder(images, dates, video_name):
+    """Sauvegarde les images dans un dossier spécifique avec le format photo_DateLier_id"""
+    # Créer le dossier output/NomDeLaVideo
+    output_dir = os.path.join("output", video_name.replace('.mp4', ''))
+    os.makedirs(output_dir, exist_ok=True)
+    
+    saved_images = []
+    for i, (img, date) in enumerate(zip(images, dates)):
+        # Nettoyer la date pour le nom de fichier
+        clean_date = clean_filename(date)
+        # Générer le nom du fichier avec le format photo_DateLier_id
+        image_filename = f"photo_{clean_date}_{i:03d}.jpg"
+        image_path = os.path.join(output_dir, image_filename)
+        
+        # Sauvegarder l'image
+        img.save(image_path, "JPEG", quality=95)
+        saved_images.append(image_path)
+    
+    return output_dir, saved_images
 
 def extract_images_and_dates_from_pdf(pdf_path):
     """Extrait les images et dates en maintenant la correspondance correcte"""
@@ -214,9 +245,15 @@ def generate_video(pdf_file, output_path, verbose=False):
     if verbose:
         print("Ajout des dates aux images...")
     edited_images = add_date_to_images(images, dates)
-
+    
     if verbose:
+        print("Sauvegarde des images...")
+    images_dir, _ = save_images_to_folder(edited_images, dates, os.path.basename(output_path))
+    
+    if verbose:
+        print(f"Images sauvegardées dans : {images_dir}")
         print("Création de la vidéo...")
+
     images_to_video(edited_images, dates, video_path, duration=2)
     
     if verbose:

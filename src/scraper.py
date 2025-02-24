@@ -90,23 +90,33 @@ async def extract_actions_and_images(log_entry, page):
             # Photos
             photos_list = await sibling.query_selector("li:has-text('PHOTOS')")
             if photos_list:
-                img_elements = await sibling.query_selector_all("img.timeline__image-grid__item__img")
+                img_elements = await sibling.query_selector_all("img")
                 for img in img_elements:
                     src = await img.get_attribute("src")
                     if src:
                         images.append(src)
             
             # Actions
-            actions_div = await sibling.query_selector("div:has-text('ACTIONS')")
-            if actions_div:
-                action_items = await sibling.query_selector_all("li.MuiListItem-root")
+            actions_nav = await sibling.query_selector("nav")  # Sélection du nav contenant les actions
+            if actions_nav:
+                action_items = await actions_nav.query_selector_all("li")
                 for action in action_items:
-                    title = await action.query_selector(".MuiTypography-body1")
-                    desc = await action.query_selector(".MuiTypography-body2")
-                    if title and desc:
-                        title_text = await title.text_content()
-                        desc_text = await desc.text_content()
-                        actions.append(f"{title_text.strip()}: {desc_text.strip()}")
+                    title_elem = await action.query_selector("span")
+                    desc_elem = await action.query_selector("p")
+
+                    title = await title_elem.text_content() if title_elem else "Unknown"
+                    
+                    # Vérifier si plusieurs informations sont dans <div>
+                    details = []
+                    divs = await action.query_selector_all("div")
+                    for div in divs:
+                        text = await div.text_content()
+                        if text.strip():
+                            details.append(text.strip())
+
+                    desc = " | ".join(details) if details else ""
+                    
+                    actions.append(f"{title.strip()}: {desc.strip()}")
             
             sibling = await sibling.evaluate_handle("el => el.nextElementSibling")
         except:
