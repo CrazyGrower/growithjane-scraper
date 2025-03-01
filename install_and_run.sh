@@ -29,8 +29,20 @@ fi
 # Installation des dépendances
 pip install --upgrade pip
 pip install -r requirements.txt
-pip install PyMuPDF opencv-python  # Ajout de PyMuPDF et OpenCV
+pip install PyMuPDF opencv-python weasyprint pygobject  # Ajout des dépendances requises
 playwright install
+
+# Installation des bibliothèques requises sous Windows
+if [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
+    echo "Installation de GTK et des bibliothèques nécessaires pour WeasyPrint..."
+    GTK_INSTALLER_URL="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/latest/download/gtk3-runtime-3.24.38-2022-08-12-ts-win64.exe"
+    GTK_INSTALLER="gtk-runtime-installer.exe"
+    
+    curl -L -o $GTK_INSTALLER $GTK_INSTALLER_URL
+    chmod +x $GTK_INSTALLER
+    ./$GTK_INSTALLER /S
+    rm $GTK_INSTALLER
+fi
 
 # Lancer l'application
 $PYTHON main.py
