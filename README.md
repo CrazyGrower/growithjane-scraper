@@ -59,6 +59,9 @@ git clone git@github.com:CrazyGrower/growithjane-scraper.git
 or
 ```bash
 git clone https://github.com/CrazyGrower/growithjane-scraper.git
+```
+and 
+```bash
 cd growithjane-scraper
 ```
 
