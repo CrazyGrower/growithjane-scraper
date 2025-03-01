@@ -9,4 +9,4 @@ uvicorn
 python-multipart
 PyMuPDF
 opencv-python
-moviepy     
+moviepy
