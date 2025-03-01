@@ -15,7 +15,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output")
 
 app = FastAPI()
 
