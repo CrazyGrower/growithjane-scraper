@@ -10,3 +10,4 @@ python-multipart
 PyMuPDF
 opencv-python
 moviepy
+pydyf==0.8.0
