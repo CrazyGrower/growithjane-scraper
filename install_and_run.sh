@@ -35,14 +35,29 @@ playwright install
 # Installation des bibliothèques requises sous Windows
 if [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
     echo "Installation de GTK et des bibliothèques nécessaires pour WeasyPrint..."
-    GTK_INSTALLER_URL="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/latest/download/gtk3-runtime-3.24.38-2022-08-12-ts-win64.exe"
+    
+    # Récupérer l'URL de la dernière version du runtime GTK
+    GTK_INSTALLER_URL=$(curl -s https://api.github.com/repos/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/latest | grep "browser_download_url" | cut -d '"' -f 4)
+
+    if [[ -z "$GTK_INSTALLER_URL" ]]; then
+        echo "Échec de la récupération de l'URL du GTK Installer."
+        exit 1
+    fi
+
     GTK_INSTALLER="gtk-runtime-installer.exe"
     
-    curl -L -o $GTK_INSTALLER $GTK_INSTALLER_URL
+    curl -L -o $GTK_INSTALLER "$GTK_INSTALLER_URL"
+    
+    if [[ ! -f $GTK_INSTALLER ]]; then
+        echo "Le fichier GTK Runtime Installer n'a pas été téléchargé correctement."
+        exit 1
+    fi
+
     chmod +x $GTK_INSTALLER
     ./$GTK_INSTALLER /S
     rm $GTK_INSTALLER
 fi
+
 
 # Lancer l'application
 $PYTHON main.py
