@@ -8,14 +8,11 @@ import os
 import re
 
 def clean_filename(filename):
-    """Nettoie une chaîne pour en faire un nom de fichier valide"""
-    # Remplacer les espaces et caractères spéciaux par des underscores
-    filename = re.sub(r'[^a-zA-Z0-9]', '_', filename)
-    # Supprimer les underscores multiples
-    filename = re.sub(r'_+', '_', filename)
-    # Supprimer les underscores au début et à la fin
-    filename = filename.strip('_')
-    return filename
+    base, ext = os.path.splitext(filename)  # Sépare le nom et l'extension
+    base = re.sub(r'[^a-zA-Z0-9]', '_', base)  # Nettoie le nom sans toucher à l'extension
+    base = re.sub(r'_+', '_', base).strip('_')
+    return f"{base}{ext}"  # Recolle l'extension
+
 
 def save_images_to_folder(images, dates, video_name):
     """Sauvegarde les images dans un dossier spécifique avec le format photo_DateLier_id"""
@@ -222,7 +219,8 @@ def images_to_video(images, dates, output_path, duration=2, fps=1):
     clip = ImageSequenceClip.ImageSequenceClip(expanded_frames, fps=fps)
     
     # Écrire la vidéo
-    clip.write_videofile(output_path, fps=fps)
+    print(f"Nom du fichier vidéo généré : {output_path}")
+    clip.write_videofile(output_path, fps=fps, codec="libx264")
 
 def generate_video(pdf_file, output_path, verbose=False):
     """Génère une vidéo à partir du PDF."""
@@ -231,7 +229,7 @@ def generate_video(pdf_file, output_path, verbose=False):
     os.makedirs(output_dir, exist_ok=True)
 
     # Chemin complet pour la vidéo
-    video_path = os.path.join(output_dir, output_path)
+    video_path = os.path.join(output_dir, clean_filename(output_path))
     
     if verbose:
         print("Extraction des images et dates du PDF...")

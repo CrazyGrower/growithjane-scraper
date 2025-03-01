@@ -65,6 +65,7 @@ async def generate(request: Request):
                 video_output = f"{title.replace(' ', '_')}.mp4"
                 video_file = generate_video(pdf_file, video_output, verbose=verbose_mode)
                 video_name = os.path.basename(video_file)
+                print("video name : ", video_name)
 
                 # Retourner la vidéo pour téléchargement
                 return FileResponse(
@@ -75,10 +76,11 @@ async def generate(request: Request):
 
             # Retourner le PDF pour téléchargement
             return FileResponse(
-                path=os.path.join(OUTPUT_DIR, pdf_name),
-                filename=pdf_name,
-                media_type="application/pdf"
-            )
+            path=os.path.join(OUTPUT_DIR, pdf_name),
+            filename=pdf_name,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={pdf_name}"}
+        )
 
     except Exception as e:
         import traceback

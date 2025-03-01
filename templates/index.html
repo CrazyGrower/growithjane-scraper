@@ -9,155 +9,99 @@
 </head>
 <body class="min-h-screen bg-gradient-to-b from-green-50 to-green-100 p-8">
     <div class="max-w-2xl mx-auto">
-        <!-- Description Section -->
         <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
             <h2 class="text-xl font-bold text-green-800 mb-4">About GrowLog Scraper</h2>
-            <div class="prose text-gray-600">
-                <p class="mb-4">GrowLog Scraper is a tool that helps you extract and archive your growing journey from GrowWithJane. It generates a comprehensive PDF report containing all your grow data, including photos, actions, and progress tracking.</p>
-                
-                <h3 class="text-lg font-semibold text-green-700 mt-4 mb-2">How to use:</h3>
-                <ol class="list-decimal list-inside space-y-2 mb-4">
-                    <li>Copy your GrowWithJane log URL (format: https://growithjane.com/growlog/your-growlog-id it's need to be in public)</li>
-                    <li>Paste the URL in the form below</li>
-                    <li>Choose if you want to generate a time-lapse video</li>
-                    <li>Enable verbose mode for detailed processing information</li>
-                    <li>Click "Generate Report" and wait for processing</li>
-                </ol>
-
-                <p class="text-sm text-gray-500">Note: The generated files will be saved in the 'output' folder of the project.</p>
-            </div>
+            <p class="text-gray-600">
+                GrowLog Scraper is a tool that allows you to extract and save your growing journey from GrowWithJane.
+                It generates a detailed <strong>PDF report</strong> containing all your grow data, including photos, actions, and progress tracking.
+            </p>
+            <p class="text-gray-600 mt-4">
+                If you select the "Generate video time-lapse" option, the tool will instead create a <strong>time-lapse video</strong>
+                showing the evolution of your grow over time.
+            </p>
+            <p class="text-gray-600 mt-4">
+                Please note that generating the PDF or video can take <strong>up to 5 minutes</strong>, depending on the amount of data.
+            </p>
+            <p class="text-gray-600 mt-4">
+                Choose your option and get your report or video in just a few clicks!
+            </p>
         </div>
 
-        <!-- Main Form Section -->
         <div class="bg-white rounded-xl shadow-xl p-8">
-            <!-- Header -->
-            <div class="flex items-center justify-center gap-3 mb-8">
-                <i data-lucide="leaf" class="w-8 h-8 text-green-600"></i>
-                <h1 class="text-3xl font-bold text-green-800">GrowLog Scraper</h1>
-            </div>
+            <h1 class="text-3xl font-bold text-green-800 text-center mb-8">GrowLog Scraper</h1>
 
-            <!-- Form -->
             <form id="generateForm" class="space-y-6" method="POST" onsubmit="handleSubmit(event)">
-                <!-- URL Input -->
-                <div class="space-y-2">
+                <div>
                     <label for="urlInput" class="block text-green-800 font-medium">GrowLog URL</label>
-                    <input
-                        type="url"
-                        id="urlInput"
-                        name="url"
-                        required
-                        placeholder="https://growithjane.com/growlog/your-growlog/"
-                        class="w-full p-3 rounded-lg border border-green-200 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    >
-                </div>
-                <div class="space-y-4">
-                    <label class="flex items-center gap-3 p-4 rounded-lg border border-green-100 hover:bg-green-50 transition cursor-pointer">
-                        <input
-                            type="checkbox"
-                            name="generate_video"
-                            class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
-                        >
-                        <i data-lucide="video" class="w-5 h-5 text-green-600"></i>
-                        <span class="text-green-800">Generate video time-lapse (and download all image in /output/growlogName)</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 p-4 rounded-lg border border-green-100 hover:bg-green-50 transition cursor-pointer">
-                        <input
-                            type="checkbox"
-                            name="verbose"
-                            class="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
-                        >
-                        <i data-lucide="file-text" class="w-5 h-5 text-green-600"></i>
-                        <span class="text-green-800">Verbose mode</span>
-                    </label>
-                </div>
-
-                <button
-                    type="submit"
-                    class="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-4 px-6 flex items-center justify-center gap-2 font-medium transition"
-                >
-                    <i data-lucide="leaf" class="w-5 h-5"></i>
-                    <span>Generate Report</span>
-                </button>
-            </form>
-
-            <!-- Loading State -->
-            <div id="loadingState" class="mt-8 hidden">
-                <div class="flex items-center justify-center gap-3">
-                    <div class="w-5 h-5 border-t-2 border-green-600 rounded-full animate-spin"></div>
-                    <span class="text-green-800">Processing...</span>
-                </div>
-            </div>
-
-            <!-- Results -->
-            <div id="results" class="mt-8 space-y-4 hidden">
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div class="flex gap-3">
-                        <i data-lucide="check" class="w-5 h-5 text-green-600"></i>
-                        <div>
-                            <h3 class="font-semibold text-green-800">Generation complete!</h3>
-                            <p class="text-green-700">The PDF file has been successfully generated in the output folder.</p>
-                        </div>
-                    </div>
+                    <input type="url" id="urlInput" name="url" required class="w-full p-3 rounded-lg border border-green-200 focus:ring-2 focus:ring-green-500 focus:border-transparent">
                 </div>
                 
-                <div id="videoResult" class="bg-green-50 border border-green-200 rounded-lg p-4 hidden">
-                    <div class="flex gap-3">
-                        <i data-lucide="video" class="w-5 h-5 text-green-600"></i>
-                        <div>
-                            <h3 class="font-semibold text-green-800">Video generated</h3>
-                            <p class="text-green-700">The time-lapse video has also been created in the output folder.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="generate_video" class="w-5 h-5 text-green-600">
+                    <span class="text-green-800">Generate video time-lapse</span>
+                </label>
+                
+                <label class="flex items-center gap-3">
+                    <input type="checkbox" name="verbose" class="w-5 h-5 text-green-600">
+                    <span class="text-green-800">Verbose mode</span>
+                </label>
+                
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-4 px-6 font-medium transition">Generate Report</button>
+            </form>
+
+            <div id="loadingState" class="mt-8 hidden text-center text-green-800">Processing...</div>
         </div>
     </div>
 
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
-    
+
         async function handleSubmit(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const loadingState = document.getElementById('loadingState');
-            const results = document.getElementById('results');
-            const videoResult = document.getElementById('videoResult');
-            
-            loadingState.classList.remove('hidden');
-            results.classList.add('hidden');
-            
-            try {
-                const formData = new FormData(form);
-                console.log("Sending data:", Object.fromEntries(formData));
-    
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    body: formData
-                });
-                
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        console.log("URL envoyée :", formData.get("url"));
+
+        // Afficher l'état de chargement
+        const loadingState = document.getElementById('loadingState');
+        loadingState.classList.remove('hidden');
+
+        try {
+            const response = await fetch('/generate', {
+                method: 'POST',
+                body: formData
+            });
+
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
                 const data = await response.json();
-                console.log("Received response:", data);
-                
-                if (data.success) {
-                    results.classList.remove('hidden');
-                    if (formData.get('generate_video') === 'on') {
-                        videoResult.classList.remove('hidden');
-                    } else {
-                        videoResult.classList.add('hidden');
-                    }
-                } else {
-                    alert('Error: ' + (data.error || 'An error occurred'));
+                if (data.error) {
+                    alert('Error: ' + data.error);
                 }
-            } catch (error) {
-                console.error("Error:", error);
-                alert('Generation error: ' + error.message);
-            } finally {
-                loadingState.classList.add('hidden');
+            } else {
+                const blob = await response.blob();
+                const contentDisposition = response.headers.get("content-disposition") || "";
+                console.log("Nom du fichier reçu :", contentDisposition);
+
+                let filename = contentDisposition.split("filename=")[1]?.replace(/"/g, '') || "report.mp4"; // Suppression des guillemets
+                console.log("Nom du fichier final :", filename);
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }
+        } catch (error) {
+            alert('Generation error: ' + error.message);
+        } finally {
+            loadingState.classList.add('hidden');
         }
-    </script>   
+    }
+
+    </script>
 </body>
 </html>
