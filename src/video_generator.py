@@ -184,9 +184,9 @@ def images_to_video(images, dates, output_path, duration=2, fps=1):
         
     # Limiter la durée totale de la vidéo à 3 minutes maximum
     total_images = len(images)
-    if total_images * duration > 180:  # 3 minutes = 180 secondes
+    if total_images * duration > 360:  # 3 minutes = 180 secondes
         duration = max(1, int(180 / total_images))
-        print(f"Durée ajustée à {duration} secondes par image pour limiter la vidéo à 3 minutes")
+        print(f"Durée ajustée à {duration} secondes par image pour limiter la vidéo à 6 minutes")
     
     # Normaliser la taille des images si nécessaire
     max_width = max(img.width for img in images)
