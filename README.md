@@ -54,7 +54,7 @@ Before installing the script, make sure you have:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/growithjane-scraper.git
+git clone git@github.com:CrazyGrower/growithjane-scraper.git
 cd growithjane-scraper
 ```
 
