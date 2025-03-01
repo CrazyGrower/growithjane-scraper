@@ -4,31 +4,33 @@
 OS="$(uname -s)"
 
 # Vérification de Python
-if ! command -v python3 &> /dev/null; then
-    echo "Python3 non trouvé. Installation en cours..."
-    if [[ "$OS" == "Linux" ]]; then
-        sudo apt update && sudo apt install -y python3 python3-venv python3-pip
-    elif [[ "$OS" == "Darwin" ]]; then
-        brew install python3
-    elif [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
-        echo "Veuillez installer Python manuellement depuis https://www.python.org/downloads/"
-        exit 1
-    else
-        echo "Système non supporté."
-        exit 1
-    fi
-else
-    echo "Python3 est déjà installé."
+if ! command -v python3 &> /dev/null && ! command -v python &> /dev/null; then
+    echo "Python n'est pas installé. Veuillez l'installer depuis https://www.python.org/downloads/ et l'ajouter au PATH."
+    exit 1
 fi
 
+# Utiliser 'python' au lieu de 'python3' sous Windows
+if [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
+    PYTHON=python
+else
+    PYTHON=python3
+fi
+
+echo "Utilisation de $PYTHON"
+
 # Création et activation de l'environnement virtuel
-python3 -m venv venv
-source venv/bin/activate || source venv/Scripts/activate
+$PYTHON -m venv venv
+if [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
+    source venv/Scripts/activate
+else
+    source venv/bin/activate
+fi
 
 # Installation des dépendances
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install PyMuPDF opencv-python  # Ajout de PyMuPDF et OpenCV
 playwright install
 
 # Lancer l'application
-python main.py
+$PYTHON main.py
