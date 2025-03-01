@@ -7,3 +7,6 @@ weasyprint
 fastapi
 uvicorn
 python-multipart
+PyMuPDF
+opencv-python
+moviepy
