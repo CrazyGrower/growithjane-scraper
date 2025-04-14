@@ -52,13 +52,13 @@ async def generate(request: Request):
             await page.wait_for_load_state('networkidle')
             
             title = await page.title()
-            entries = await extract_logs(page, verbose_mode)
+            entries, metadata = await extract_logs(page, verbose_mode)
 
             await context.close()
             await browser.close()
 
             # Générer le PDF
-            pdf_file = generate_pdf(title, entries, verbose=verbose_mode)
+            pdf_file = generate_pdf(title, entries, metadata, verbose=verbose_mode)
             pdf_name = os.path.basename(pdf_file)
 
             if need_video:
