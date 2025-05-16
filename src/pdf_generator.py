@@ -17,10 +17,15 @@ def generate_pdf(title, entries, metadata, template_path="templates/template.htm
     if verbose:
         logger.info("Generating PDF...")
 
-    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "output")
+    # Utiliser le chemin absolu pour le dossier de sortie
+    output_dir = os.path.join('/app', 'output')
     os.makedirs(output_dir, exist_ok=True)
 
-    pdf_filename = os.path.join(output_dir, f"{title.replace(' ', '_')}.pdf")
+    # Utiliser le nom de la plante si disponible, sinon le titre, sinon 'growlog'
+    plant_name = metadata.get('strain', {}).get('name')
+    safe_title = (plant_name or title or "growlog").strip() or "growlog"
+    filename = f"{safe_title.replace(' ', '_')}.pdf"
+    output_path = os.path.join(output_dir, filename)
     
     # Clean up the metadata to remove any Medium references
     if 'medium' in metadata:
@@ -58,13 +63,23 @@ def generate_pdf(title, entries, metadata, template_path="templates/template.htm
     if 'Medium' in metadata['environment']:
         metadata['environment'].pop('Medium', None)
 
+    # S'assurer que les chemins d'images sont corrects
+    for entry in entries:
+        if 'images' in entry:
+            for img in entry['images']:
+                if 'local_path' in img:
+                    # Convertir le chemin en chemin relatif par rapport à /app
+                    img['local_path'] = os.path.relpath(img['local_path'], '/app')
+
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template(template_path)
 
     html_content = template.render(title=title, entries=entries, metadata=metadata)
-    HTML(string=html_content).write_pdf(pdf_filename)
+    
+    # Créer le PDF avec WeasyPrint en spécifiant le répertoire de base
+    HTML(string=html_content, base_url='/app').write_pdf(output_path)
 
     if verbose:
-        logger.info(f"PDF generated successfully: {pdf_filename}")
+        logger.info(f"PDF generated successfully: {output_path}")
 
-    return pdf_filename
+    return output_path

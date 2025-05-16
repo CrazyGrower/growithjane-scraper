@@ -4,196 +4,331 @@
   <meta charset="UTF-8">
   <title>{{ title }}</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
     body { 
-      font-family: 'Arial', sans-serif; 
-      margin: 2rem;
-      background-color: #f8f9f3;
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #F5F7F5;
+      color: #2C3E50;
+      line-height: 1.6;
     }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
     h1 { 
-      color: #4CAF50; 
+      color: #2E7D32;
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-      border-bottom: 2px solid #4CAF50;
-      padding-bottom: 0.5rem;
+      font-size: 2.8rem;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      padding-bottom: 1rem;
+      border-bottom: 4px solid #4CAF50;
     }
+
     h2 { 
-      color: #2E7D32; 
+      color: #2E7D32;
+      font-size: 1.8rem;
+      margin: 2rem 0 1rem;
+      font-weight: 600;
+      position: relative;
+      padding-left: 1rem;
       border-left: 4px solid #4CAF50;
-      padding-left: 10px;
-      margin-top: 2rem;
     }
+
     .section { 
-      margin-bottom: 2rem; 
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border: 1px solid rgba(76, 175, 80, 0.2);
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #E0E0E0;
     }
+
     .metadata-block { 
-      background-color: #f0f7f0; 
-      border-radius: 10px; 
-      border: 1px solid #b7e1b7;
+      background: #f0f7f0;
+      border: 1px solid #81C784;
     }
+
     .stages-table, .env-table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      margin-top: 1rem;
-      background-color: white;
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      border: 1px solid #E0E0E0;
     }
+
     .stages-table th, .env-table th { 
-      background-color: #4CAF50; 
+      background-color: #2E7D32;
       color: white;
-      padding: 0.8rem;
+      padding: 1rem;
       text-align: left;
+      font-weight: 500;
     }
+
     .stages-table td, .env-table td { 
-      border-bottom: 1px solid #ddd; 
-      padding: 0.8rem;
+      padding: 1rem;
+      border-bottom: 1px solid #E0E0E0;
     }
+
+    .stages-table tr:last-child td {
+      border-bottom: none;
+    }
+
     .stages-table tr:nth-child(even), .env-table tr:nth-child(even) { 
-      background-color: #f2f2f2;
+      background-color: #F8F9FA;
     }
+
     .entry { 
-      margin-top: 1.5rem; 
-      padding: 1.5rem; 
-      border-radius: 10px;
-      background-color: white; 
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border: 1px solid #E0E0E0;
       border-left: 5px solid #4CAF50;
     }
+
     .entry-title {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid #e0e0e0;
+      align-items: center;
+      margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      margin-bottom: 0.8rem;
+      border-bottom: 2px solid #E0E0E0;
     }
+
     .plant-state {
       display: inline-block;
-      padding: 5px 10px;
-      background-color: #e8f5e9;
-      border-radius: 15px;
-      color: #2E7D32;
-      font-weight: bold;
+      padding: 0.5rem 1rem;
+      background-color: #81C784;
+      color: white;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+
     .image-gallery { 
-      display: flex; 
-      flex-wrap: wrap; 
-      gap: 12px; 
-      margin-top: 15px; 
+      display: flex;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
     }
+
     .image-gallery img { 
-      max-width: 200px; 
-      max-height: 200px; 
-      object-fit: cover; 
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      border: 1px solid #ddd;
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin: 0.5rem;
+      border: 1px solid #E0E0E0;
+      background: #eee;
+      display: block;
     }
+
+    .image-gallery img:after {
+      content: attr(alt);
+      color: #c00;
+      font-size: 12px;
+      display: block;
+      text-align: center;
+    }
+
+    .image-gallery img:not([src]) {
+      border: 2px solid #c00;
+      background: #eee url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23eee"/><text x="50%" y="50%" font-size="20" fill="%23c00" text-anchor="middle" alignment-baseline="middle">Image not found</text></svg>') center/contain no-repeat;
+    }
+
     .action-list {
       list-style-type: none;
-      padding-left: 0;
+      padding: 0;
+      margin: 1rem 0;
     }
+
     .action-list li {
-      margin-bottom: 8px;
-      padding: 8px 12px;
-      background-color: #f5f5f5;
-      border-radius: 6px;
+      background-color: #F8F9FA;
+      margin-bottom: 0.8rem;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
       position: relative;
-      padding-left: 30px;
+      padding-left: 2.5rem;
+      border: 1px solid #E0E0E0;
     }
-    .action-list li:before {
-      content: "•";
-      color: #4CAF50;
-      font-size: 20px;
+
+    .action-list li::before {
+      content: "→";
       position: absolute;
-      left: 12px;
-      top: 6px;
+      left: 1rem;
+      color: #4CAF50;
+      font-weight: bold;
     }
+
     .cannabis-decoration {
       text-align: center;
-      margin: 1rem 0;
-      color: #4CAF50;
-      font-size: 24px;
+      margin: 2rem 0;
+      font-size: 2rem;
+      color: #2E7D32;
+      opacity: 0.8;
     }
+
     @media print {
+      body {
+        background-color: white;
+        padding: 0;
+      }
+
       .section {
         break-inside: avoid;
+        border: 1px solid #E0E0E0;
       }
+
       .entry {
         break-inside: avoid;
+        border: 1px solid #E0E0E0;
       }
+
+      .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .image-gallery img {
+        width: 45%;
+        margin: 1%;
+      }
+    }
+
+    .tree-log-tag {
+      display: inline-block;
+      background: #e0f7fa;
+      color: #00796b;
+      border-radius: 8px;
+      padding: 0.2em 0.7em;
+      margin: 0.2em 0.2em 0.2em 0;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+    .stage-change-tag {
+      display: inline-block;
+      background: #ffe082;
+      color: #b28704;
+      border-radius: 8px;
+      padding: 0.2em 0.7em;
+      margin-left: 0.5em;
+      font-size: 0.95em;
+      font-weight: 600;
+      box-shadow: 0 1px 2px #0001;
+    }
+
+    /* .stage-entry {
+      border-left: 8px solid #ffe082;
+      background: #fffde7;
+    } */
+    .stage-change-banner {
+      background: #ffe082;
+      color: #b28704;
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: 600;
+      border-radius: 8px;
+      margin: 1em 0;
+      padding: 0.7em 0.5em;
+      box-shadow: 0 1px 2px #0001;
+    }
+
+    .stage-badge {
+      display: inline-block;
+      background: #81C784;
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.2em 0.7em;
+      margin-right: 0.7em;
+      font-size: 1em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
-  <h1>{{ title }}</h1>
-
-  <div class="section metadata-block">
-    <h2>Grow Info</h2>
-    <div class="cannabis-decoration">☘️ 🌱 ☘️</div>
-
-    <h3>Stages</h3>
-    <table class="stages-table">
-      <tr><th>Stage</th><th>Date</th></tr>
-      {% for stage in metadata.stages %}
-      <tr><td>{{ stage.name }}</td><td>{{ stage.date }}</td></tr>
-      {% endfor %}
-    </table>
-
-    <h3>Environment</h3>
-    <table class="env-table">
-      <tr><th>Parameter</th><th>Value</th></tr>
-      {% if metadata.strain %}
-      <tr><td><strong>Strain</strong></td><td>{{ metadata.strain.brand }} {{ metadata.strain.name }}</td></tr>
-      {% endif %}
-      
-      <tr><td><strong>Name</strong></td><td>Hydro mars</td></tr>
-      <tr><td><strong>Type</strong></td><td>Indoor</td></tr>
-      <tr><td><strong>Exposure Time</strong></td><td>16 Hours</td></tr>
-      <tr><td><strong>Environment Size</strong></td><td>80 cm x 160 cm x 80 cm</td></tr>
-      <tr><td><strong>Lights</strong></td><td>LED - 150 W</td></tr>
-      
-      {% for label, value in metadata.environment.items() %}
-      {% if label not in ['Name', 'Type', 'Exposure Time', 'Environment Size', 'Lights'] %}
-      <tr><td><strong>{{ label }}</strong></td><td>{{ value }}</td></tr>
-      {% endif %}
-      {% endfor %}
-    </table>
+  <div class="cover-page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh;">
+    <h1 style="font-size: 3rem; color: #2E7D32; margin-bottom: 2rem;">{{ metadata.strain.name }}</h1>
   </div>
+  <div class="container">
+    <div class="section metadata-block">
+      <h2>Grow Info</h2>
+      <div class="cannabis-decoration">🌱</div>
 
-  <div class="section">
-    <h2>Grow Log Entries</h2>
-    <div class="cannabis-decoration">🌿 🌿 🌿</div>
-    
-    {% for entry in entries %}
-    <div class="entry">
-      <div class="entry-title">
-        <p><strong>Date:</strong> {{ entry.full_date }} ({{ entry.day_count }})</p>
-        <p><span class="plant-state">{{ entry.plant_state }}</span></p>
-      </div>
-      
-      {% if entry.actions and entry.actions|length > 0 %}
-      <ul class="action-list">
-        {% for action in entry.actions %}
-        <li>{{ action }}</li>
+      <h3>Stages</h3>
+      <table class="stages-table">
+        <tr><th>Stage</th><th>Date</th></tr>
+        {% for stage in metadata.stages %}
+        <tr><td>{{ stage.name }}</td><td>{{ stage.date }}</td></tr>
         {% endfor %}
-      </ul>
-      {% endif %}
-      
-      {% if entry.images and entry.images|length > 0 %}
-      <div class="image-gallery">
-        {% for img in entry.images %}
-        <img src="{{ img }}" alt="Plant photo from {{ entry.full_date }}">
+      </table>
+
+      <h3>Environment</h3>
+      <table class="env-table">
+        <tr><th>Parameter</th><th>Value</th></tr>
+        {% if metadata.strain %}
+        <tr><td><strong>Strain</strong></td><td>{{ metadata.strain.brand }} {{ metadata.strain.name }}</td></tr>
+        {% endif %}
+        
+        {% for label, value in metadata.environment.items() %}
+        <tr><td><strong>{{ label }}</strong></td><td>{{ value }}</td></tr>
         {% endfor %}
-      </div>
-      {% endif %}
+      </table>
     </div>
-    {% endfor %}
+
+    <div class="section">
+      <h2>Grow Log Entries</h2>
+      <div class="cannabis-decoration">🌿</div>
+      
+      {% for entry in entries %}
+      <div class="entry">
+        <div class="flex flex-row-reverse justify-between gap-2 items-center py-2 px-4 border-b border-outline-variant rounded-t-lg " data-testid="growlog-page-timeline-card-date">
+          <div class="flex flex-row gap-2 items-center">
+            <p><strong>Date:</strong> {{ entry.full_date }} {% if entry.day_count %}({{ entry.day_count }}){% endif %}</p>
+            {% if entry.plant_state %}
+              <span class="plant-state">{{ entry.plant_state }}</span>
+            {% endif %}
+          </div>
+          <span class="" data-testid="growlog-page-timeline-card-date-age">{{ entry.day_count }}</span>
+          {% if entry.stage_change %}
+            <span class="stage-change-tag">{{ entry.stage_change }}</span>
+          {% endif %}
+        </div>
+        
+        {% if entry.actions and entry.actions|length > 0 %}
+        <ul class="action-list">
+          {% for action in entry.actions %}
+          <li>{{ action }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <div class="image-gallery">
+          {% for img in entry.images %}
+          <img src="{{ img.local_path }}" alt="Plant photo from {{ entry.full_date }} ({{ img.local_path }})">
+          {% endfor %}
+        </div>
+
+        {% if entry.tree_logs %}
+          <div class="tree-logs">
+            {% for label, value in entry.tree_logs.items() %}
+              <span class="tree-log-tag">{{ label }}: {{ value }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </body>
 </html>

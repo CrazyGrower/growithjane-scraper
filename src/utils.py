@@ -13,3 +13,4 @@ def log_message(message, verbose=False):
     """Print a log message if verbose mode is enabled."""
     if verbose:
         print(f"[LOG] {message}")
+        

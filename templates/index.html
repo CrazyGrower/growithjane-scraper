@@ -37,11 +37,6 @@
                 </div>
                 
                 <label class="flex items-center gap-3">
-                    <input type="checkbox" name="generate_video" class="w-5 h-5 text-green-600">
-                    <span class="text-green-800">Generate video time-lapse</span>
-                </label>
-                
-                <label class="flex items-center gap-3">
                     <input type="checkbox" name="verbose" class="w-5 h-5 text-green-600">
                     <span class="text-green-800">Verbose mode</span>
                 </label>
@@ -49,44 +44,151 @@
                 <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-4 px-6 font-medium transition">Generate Report</button>
             </form>
 
+            <button id="generateVideoBtn" class="w-full bg-green-500 hover:bg-green-700 text-white rounded-lg py-4 px-6 font-medium transition mt-6 hidden">Générer la vidéo timelapse</button>
+
             <div id="loadingState" class="mt-8 hidden text-center text-green-800">Processing...</div>
+            <div id="progressBarContainer" class="mt-8 hidden text-center">
+              <div class="w-full bg-gray-200 rounded-full h-4">
+                <div id="progressBar" class="bg-green-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <span id="progressText" class="block mt-2 text-green-800">Starting...</span>
+            </div>
         </div>
     </div>
 
     <script>
-        lucide.createIcons();
+        let lastPdfFilename = null;
+        let pdfDownloaded = false;
 
         async function handleSubmit(event) {
-        event.preventDefault();
-        
-        const form = event.target;
-        const formData = new FormData(form);
-        console.log("URL envoyée :", formData.get("url"));
+            event.preventDefault();
+            pdfDownloaded = false;
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            console.log("URL envoyée :", formData.get("url"));
 
-        // Afficher l'état de chargement
-        const loadingState = document.getElementById('loadingState');
-        loadingState.classList.remove('hidden');
+            // Afficher la barre de progression
+            const loadingState = document.getElementById('loadingState');
+            const progressBarContainer = document.getElementById('progressBarContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
 
-        try {
-            const response = await fetch('/generate', {
-                method: 'POST',
-                body: formData
-            });
+            loadingState.classList.add('hidden');
+            progressBarContainer.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Starting...';
 
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-                const data = await response.json();
-                if (data.error) {
-                    alert('Error: ' + data.error);
+            // Simule une progression (améliorable si backend envoie des updates)
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 10;
+                    progressBar.style.width = `${Math.min(progress, 90)}%`;
+                    progressText.textContent = `Processing... (${Math.floor(progress)}%)`;
                 }
-            } else {
+            }, 500);
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const contentType = response.headers.get("content-type");
+                console.log("Content-Type reçu:", contentType, "Status:", response.status);
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    if (data.error) {
+                        console.log("Erreur JSON reçue:", data.error);
+                        progressText.textContent = 'Error: ' + data.error;
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progressBarContainer.classList.add('hidden');
+                        }, 2000);
+                        return;
+                    }
+                } else if (response.ok && contentType && contentType.includes("application/pdf")) {
+                    console.log("On traite le PDF (branche PDF)");
+                    const blob = await response.blob();
+                    const contentDisposition = response.headers.get("content-disposition") || "";
+                    let filename = contentDisposition.split("filename=")[1]?.replace(/"/g, '') || "report.pdf";
+                    lastPdfFilename = filename;
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    pdfDownloaded = true;
+                    // Afficher le bouton vidéo après génération du PDF
+                    document.getElementById('generateVideoBtn').classList.remove('hidden');
+                    progressBar.style.width = '100%';
+                    progressText.textContent = 'Done!';
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressBarContainer.classList.add('hidden');
+                    }, 1000);
+                    return;
+                } else if (response.ok) {
+                    console.log("On traite le PDF (branche fallback)");
+                    const blob = await response.blob();
+                    const contentDisposition = response.headers.get("content-disposition") || "";
+                    let filename = contentDisposition.split("filename=")[1]?.replace(/"/g, '') || "report.pdf";
+                    lastPdfFilename = filename;
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    pdfDownloaded = true;
+                    document.getElementById('generateVideoBtn').classList.remove('hidden');
+                    progressBar.style.width = '100%';
+                    progressText.textContent = 'Done!';
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressBarContainer.classList.add('hidden');
+                    }, 1000);
+                    return;
+                } else {
+                    console.log("Branche else finale, response.ok:", response.ok);
+                    progressText.textContent = 'Erreur inattendue lors du téléchargement du PDF';
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressBarContainer.classList.add('hidden');
+                    }, 2000);
+                    return;
+                }
+            } catch (error) {
+                console.log("Erreur JS attrapée dans le catch:", error);
+                if (!pdfDownloaded) {
+                    progressText.textContent = 'Error!';
+                }
+                clearInterval(interval);
+                setTimeout(() => {
+                    progressBarContainer.classList.add('hidden');
+                }, 2000);
+            }
+        }
+
+        // Gestion du bouton vidéo
+        document.getElementById('generateVideoBtn').addEventListener('click', async function() {
+            if (!lastPdfFilename) return;
+            this.disabled = true;
+            this.textContent = 'Génération en cours...';
+            try {
+                const formData = new FormData();
+                formData.append('pdf_filename', lastPdfFilename);
+                const response = await fetch('/generate_video', {
+                    method: 'POST',
+                    body: formData
+                });
                 const blob = await response.blob();
                 const contentDisposition = response.headers.get("content-disposition") || "";
-                console.log("Nom du fichier reçu :", contentDisposition);
-
-                let filename = contentDisposition.split("filename=")[1]?.replace(/"/g, '') || "report.mp4"; // Suppression des guillemets
-                console.log("Nom du fichier final :", filename);
-
+                let filename = contentDisposition.split("filename=")[1]?.replace(/"/g, '') || "timelapse.mp4";
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
@@ -94,13 +196,16 @@
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                this.textContent = 'Générer la vidéo timelapse';
+                this.disabled = false;
+            } catch (e) {
+                this.textContent = 'Erreur lors de la génération';
+                setTimeout(() => {
+                    this.textContent = 'Générer la vidéo timelapse';
+                    this.disabled = false;
+                }, 2000);
             }
-        } catch (error) {
-            alert('Generation error: ' + error.message);
-        } finally {
-            loadingState.classList.add('hidden');
-        }
-    }
+        });
 
     </script>
 </body>
